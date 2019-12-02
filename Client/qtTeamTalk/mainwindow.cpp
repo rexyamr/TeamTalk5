@@ -742,7 +742,6 @@ void MainWindow::loadSettings()
 
     if(connect_ok)
         QTimer::singleShot(0, this, &MainWindow::slotConnectToLatest);
-
 #if defined(Q_OS_WINDOWS) && defined(ENABLE_TOLK)
     bool tolkLoaded = Tolk_IsLoaded();
     if (!tolkLoaded)
@@ -1111,6 +1110,10 @@ void MainWindow::processTTMessage(const TTMessage& msg)
             TT_SetUserMediaStorageDir(ttInst, msg.user.nUserID, _W(audiofolder), nullptr, aff);
 
         updateUserSubscription(msg.user.nUserID);
+
+        if (msg.user.nUserID != TT_GetMyUserID(ttInst))
+            TT_EnableAudioBlockEvent(ttInst, msg.user.nUserID,  STREAMTYPE_VOICE, true);
+
         if(m_commands[m_current_cmdid] != CMD_COMPLETE_LOGIN)
         {
             addStatusMsg(STATUSBAR_USER_LOGGEDIN, tr("%1 has logged in") .arg(getDisplayName(msg.user)));
@@ -1619,10 +1622,14 @@ void MainWindow::processTTMessage(const TTMessage& msg)
                 << "index" << block->uSampleIndex 
                 << "samples" << block->nSamples
                 << "avg" << mean;
+            TT_InsertAudioBlock(ttInst, block);
             TT_ReleaseUserAudioBlock(ttInst, block);
         }
     }
     break;
+    case CLIENTEVENT_AUDIOINPUT :
+        qDebug() << "Active audio input #" << msg.nSource << " " << msg.audioinputprogress.uElapsedMSec << " msec. Queue: " << msg.audioinputprogress.uQueueMSec;
+        break;
     case CLIENTEVENT_HOTKEY :
         Q_ASSERT(msg.ttType == __TTBOOL);
         hotkeyToggle((HotKeyID)msg.nSource, (bool)msg.bActive);
