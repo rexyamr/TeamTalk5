@@ -127,7 +127,7 @@ namespace ttserverlog.net
             {
                 ttclient.ProcessMsg(msg);
                 if (msg.nClientEvent == ClientEvent.CLIENTEVENT_CMD_PROCESSING &&
-                    msg.nSource == cur_cmd_id && (bool)msg.DataToObject() /* bActive */ == false)
+                    msg.nSource == cur_cmd_id && msg.bActive == false)
                     break;
             }
 
