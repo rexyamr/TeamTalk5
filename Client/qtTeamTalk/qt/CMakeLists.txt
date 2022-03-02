@@ -61,13 +61,13 @@ if (MSVC)
     PREFIX            ${QT_BUILD_PREFIX}
     GIT_REPOSITORY    https://github.com/qt/qt5
     GIT_TAG           v5.15.1
-    GIT_SUBMODULES    qtbase qttools qtmultimedia qtactiveqt qtspeech
+    GIT_SUBMODULES    qtbase qttools qtmultimedia qtspeech qtwinextras
     GIT_SHALLOW       TRUE
     UPDATE_COMMAND    ""
     PATCH_COMMAND     cd qtbase
     COMMAND           git apply ${CMAKE_CURRENT_LIST_DIR}\\qt_v5.15.1_win.patch
     COMMAND           cd ..
-    CONFIGURE_COMMAND CALL <SOURCE_DIR>\\configure.bat -opensource -confirm-license -static -nomake examples -openssl-linked -I${OPENSSL_DIR_NATIVE}\\include "OPENSSL_LIBS= -L${OPENSSL_DIR_NATIVE}\\lib -lUser32 -lAdvapi32 -lGdi32 -lCrypt32 -lws2_32 -llibssl -llibcrypto" -prefix ${QT_INSTALL_PREFIX_NATIVE}
+    CONFIGURE_COMMAND CALL <SOURCE_DIR>\\configure.bat -opensource -confirm-license -nomake examples -openssl-linked -I${OPENSSL_DIR_NATIVE}\\include "OPENSSL_LIBS= -L${OPENSSL_DIR_NATIVE}\\lib -lUser32 -lAdvapi32 -lGdi32 -lCrypt32 -lws2_32 -llibssl -llibcrypto" -prefix ${QT_INSTALL_PREFIX_NATIVE}
     BUILD_COMMAND     set CL=/MP
     COMMAND           CALL nmake
     INSTALL_DIR       ${QT_INSTALL_PREFIX}
